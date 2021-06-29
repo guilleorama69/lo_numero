@@ -5,4 +5,5 @@ num/lib64/
 num/__pycache__/
 num/share/
 num/*.cfg
+num/.vscode/
 
