@@ -1,0 +1,14 @@
+        Login
+            verificar campo Mail
+            verificar campo Fecha
+            validar usuario nuevo por email
+        Juego
+            sesion de juego
+                verificar usuarios en linea para poder jugar
+                guardar en base de datos un id de juego, id de usuarios, numero para descifrar, turno
+            actualizacion de paginas
+                necesario para chat y si quiero ver que tiro el adversario
+            proceso del juego
+                logueo=>seleccion de adversario=>guaradr datos en db=> verificar turno y numero tirado=> gano borrar db
+                
+        Chat

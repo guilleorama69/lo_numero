@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div id="second">
+                <div class="myform form ">
+                    <div class="logo mb-3">
+                        <div class="col-md-12 text-center">
+                            <h1>Signup</h1>
+                        </div>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class="alert alert-success">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                    {% if error %}
+                    <p class="alert alert-danger"><strong>Error:</strong> {{ error }}
+                        {% endif %}
+                    <form action="/signup" method="post" name="registration">
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Nombre</label>
+                            <input type="text" name="firstname" class="form-control" id="firstname"
+                                aria-describedby="emailHelp" placeholder="Su nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Apellido</label>
+                            <input type="text" name="lastname" class="form-control" id="lastname"
+                                aria-describedby="emailHelp" placeholder="Su apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email</label>
+                            <input type="email" name="email" class="form-control" id="email"
+                                aria-describedby="emailHelp" placeholder="Su email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Password</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                aria-describedby="emailHelp" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Nacimiento</label>
+                            <input type="date" name="birthday" class="form-control" id="birthday"
+                                aria-describedby="emailHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Genero</label>
+                            <select name="gender" id="gender" class="form-control">
+                                <option value="female">Femenino</option>
+                                <option value="male">Masculino</option>
+                                <option value="notbinary">No Binario</option>
+                                <option value="undefined">Indefinido</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2  mx-auto">
+                            <br>
+                            <button type="submit" class="btn btn-outline-secondary btn-lg">Cree una
+                                cuenta</button>
+                        </div>
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <p class="text-center"><a href="{{ url_for('auth_routes.login') }}" id="signin">Ya tiene
+                                        cuenta?</a></p>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
