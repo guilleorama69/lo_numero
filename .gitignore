@@ -1,0 +1,8 @@
+num/bin/
+num/include/
+num/lib/
+num/lib64/
+num/__pycache__/
+num/share/
+num/*.cfg
+

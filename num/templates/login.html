@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div id="first">
+                <div class="myform form ">
+                    <div class="logo mb-3">
+                        <div class="col-md-12 text-center">
+                            <h1>Login</h1>
+                        </div>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class="alert alert-success">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                    {% if error %}
+                    <p class="alert alert-danger"><strong>Error:</strong> {{ error }}
+                        {% endif %}
+                    <form action="/login" method="post" name="login">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email </label>
+                            <input type="email" name="email" class="form-control" id="login_email"
+                                aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Password</label>
+                            <input type="password" name="password" id="login_password" class="form-control"
+                                aria-describedby="emailHelp" placeholder="Enter Password">
+                        </div>
+                        <div class="form-group">
+                            <p class="text-center">Accediendo acepta <a href="{{ url_for('no_auth_main.terms') }}">los
+                                    terminos de uso</a></p>
+                        </div>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button type="submit" onclick=online() class="btn btn-outline-secondary">Login</button>
+                        </div>
+                        <!-- <div class="col-md-12 ">
+                            <div class="login-or">
+                                <hr class="hr-or">
+                                <span class="span-or">or</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <p class="text-center">
+                                <a href="javascript:void();" class="google btn mybtn"><i class="fa fa-google-plus">
+                                    </i> Signup using Google
+                                </a>
+                            </p>
+                        </div> -->
+                        <div class="form-group">
+                            <p class="text-center">No tiene cuenta? <a href="{{ url_for('auth_routes.signup') }}"
+                                    id="signup">Sign up</a>
+                            </p>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{%endblock%}
