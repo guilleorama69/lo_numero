@@ -14,7 +14,7 @@ def create_app(debug=False):
 
     app.config['MYSQL_HOST'] = 'localhost'
     app.config['MYSQL_USER'] = 'guille'
-    app.config['MYSQL_PASSWORD'] = 'mango69'
+    app.config['MYSQL_PASSWORD'] = 'mypass'
     app.config['MYSQL_DB'] = 'mycrud'
     mysql = MySQL(app)
 
