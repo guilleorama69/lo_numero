@@ -16,7 +16,7 @@ def on_login():
     email = request.form.get('email')
     password = request.form.get('password')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT name, pass, id FROM users WHERE mail = %s', [
+    cursor.execute('SELECT name, pass, id, mail FROM users WHERE mail = %s', [
                    email])
     user = cursor.fetchone()
     cursor.close()
@@ -50,8 +50,20 @@ def exists_mail(mail):
         return False
 
 
+def make_sql_querry(sql):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+        return data
+    except:
+        return print(f'error en make_sql_querry con:{sql}')
+
 # Logica del Juego
 # ----------------------------------------------------------------------------------------------------------
+
 
 def numeroOK(numeros):
     error = ""
@@ -94,7 +106,7 @@ def valorarTirada(numeros, tirada):
         if digito in listnumeros:
             unidad += 1
             listnumeros.remove(digito)
-    resultado = [decimal, unidad]
+    resultado = float(f'{decimal}.{unidad}')
     return resultado
 
 
@@ -105,6 +117,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            print('aca ta el error')
             return redirect(url_for('auth_routes.login'))
 
         return view(**kwargs)
@@ -115,7 +128,8 @@ def login_required(view):
 def authenticated_only(f):
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
-        if g.user is None:
+        user_id = session.get('id')
+        if user_id is None:
             flash('No auth')
             disconnect()
             return

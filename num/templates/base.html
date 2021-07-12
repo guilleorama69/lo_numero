@@ -58,9 +58,10 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     {%if g.user%}
-                    <a class="nav-link" href="{{ url_for('no_auth_main.loNumero') }}">Jugar Los Numeros</a>
+                    <a class="nav-link" href="{{ url_for('no_auth_main.buscarSala') }}">Jugar Los
+                        Numeros</a>
                     <a class="nav-link" href="{{ url_for('no_auth_main.profile') }}">Perfil</a>
-                    <a class="nav-link " href="{{ url_for('auth_routes.logout') }}">Logout</a>
+                    <a class="nav-link " href="{{ url_for('auth_routes.logout') }}" onclick=offline()>Logout</a>
                     {%else%}
                     <a class="nav-link" href="{{ url_for('auth_routes.login') }}">Login</a>
                     <a class="nav-link " href="{{ url_for('auth_routes.signup') }}">Sign Up</a>
@@ -86,6 +87,7 @@
         </div>
     </div>
     {%endif%}
+
     <footer>
         <div class="block">
             <a href="https://t.me/guilleorama"><i class="fab fa-telegram "></i></a>

@@ -22,4 +22,4 @@ def get_env_config(var, file):
     except FileNotFoundError:
         return -1, print(f'{FileNotFoundError} Can\'t open {file}')
     except:
-        return -1, print(f'Unexpected error')
+        return -1, print(f'Unexpected error from get_env_config()')

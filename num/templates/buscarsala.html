@@ -29,37 +29,40 @@
                 <thead>
                     <tr class="table-primary">
                         <th scope="col">#</th>
-                        <th scope="col">Mi Tirada</th>
-                        <th scope="col">Resultado</th>
+                        <th scope="col">Sala abierta</th>
+                        <th scope="col">Creador</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if tiradas %}
-                    {%for tirada in tiradas%}
-                    <tr {% if tirada[2]==4.0 %} class="table-success" {% elif tirada[2]==0.4 or tirada[2]> 2.1 %}
-                        class="table-danger" {%
-                        else %} class="table-warning" {%endif%}>
+                    {% if salas %}
+                    {%for sala in salas%}
+                    <tr class="table-success">
                         <th scope="row">{{loop.index}}</th>
-                        <td>{{tirada[1]}}</td>
-                        <td>{{tirada[2]}}</td>
+                        <td>{{sala[0]}}</td>
+                        <td>{{sala[1]}}</td>
                     </tr>
                     {%endfor%}
                     {%endif%}
                 </tbody>
             </table>
+            {% if error %}
+            <p class="alert alert-danger"><strong>Error:</strong> {{error}} </p>
+            {% endif %}
             <form>
+                {% if not locked %}
                 <div class="row g-3 ">
                     <div class="col-auto">
-                        <label for="Tirada" class="form-label">Has tu tirada</label>
+                        <label for="Sala" class="form-label">Crear Sala</label>
                     </div>
                     <div class="col-auto">
-                        <input type="text" class=" col-6 form-control" id="id_tirada">
+                        <input type="text" class=" col-6 form-control" name="sala" id="id_sala">
                     </div>
 
                     <div class="col-auto">
-                        <button onclick=enviar_tirada() class="btn btn-outline-primary">Tirar</button>
+                        <button onclick=crear_sala() class="btn btn-outline-primary">Crear</button>
                     </div>
                 </div>
+                {%endif%}
             </form>
         </div>
     </div>
