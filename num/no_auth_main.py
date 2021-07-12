@@ -1,9 +1,7 @@
 # import functools
 
 
-from re import T
 from flask import Blueprint, render_template, session, redirect, url_for, g, flash
-#from werkzeug.wrappers import request
 from flask_socketio import emit
 from app import mysql, mysocket
 from resources import login_required, make_sql_querry, authenticated_only, numeroOK, valorarTirada
