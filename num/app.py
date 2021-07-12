@@ -2,7 +2,13 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
+from globals import get_env_config
 
+db = get_env_config('DBNAME', 'env.cfg')
+host = get_env_config('DBHOST', 'env.cfg')
+secretkey = get_env_config('SECRETKEY', 'env.cfg')
+dbuser = get_env_config('DBUSER', 'env.cfg')
+password = get_env_config('DBPASS', 'env.cfg')
 
 mysql = MySQL()
 

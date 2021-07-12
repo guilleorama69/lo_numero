@@ -1,9 +1,15 @@
 import functools
+
+
+#from werkzeug.utils import append_slash_redirect
 from app import mysql
 from flask import request, flash, session, redirect, url_for, g
-from werkzeug.security import check_password_hash
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask_socketio import disconnect
+
+
+# exclusivo de la app
+# ------------------------------------------------------------------------------------------------------------------------------
 
 
 def on_login():
@@ -43,34 +49,9 @@ def exists_mail(mail):
     else:
         return False
 
- # Decoradores para autentificar
 
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth_routes.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view
-
-
-def authenticated_only(f):
-    @functools.wraps(f)
-    def wrapped(*args, **kwargs):
-        if g.user is None:
-            flash('No auth')
-            disconect()
-            return
-        else:
-            return f(*args, **kwargs)
-
-    return wrapped
-
-    # Logica del Juego
-
+# Logica del Juego
+# ----------------------------------------------------------------------------------------------------------
 
 def numeroOK(numeros):
     error = ""
@@ -115,3 +96,30 @@ def valorarTirada(numeros, tirada):
             listnumeros.remove(digito)
     resultado = [decimal, unidad]
     return resultado
+
+
+# Decoradores para autentificar
+# ---------------------------------------------------------------------------------------------------------
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth_routes.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+
+def authenticated_only(f):
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        if g.user is None:
+            flash('No auth')
+            disconnect()
+            return
+        else:
+            return f(*args, **kwargs)
+
+    return wrapped
