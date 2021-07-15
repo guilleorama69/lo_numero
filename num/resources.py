@@ -1,7 +1,4 @@
 import functools
-
-
-#from werkzeug.utils import append_slash_redirect
 from app import mysql
 from flask import request, flash, session, redirect, url_for, g
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -49,17 +46,6 @@ def exists_mail(mail):
     else:
         return False
 
-
-def make_sql_querry(sql):
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        mysql.connection.commit()
-        cursor.close()
-        return data
-    except:
-        return print(f'error en make_sql_querry con:{sql}')
 
 # Logica del Juego
 # ----------------------------------------------------------------------------------------------------------
@@ -117,7 +103,6 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            print('aca ta el error')
             return redirect(url_for('auth_routes.login'))
 
         return view(**kwargs)

@@ -1,6 +1,6 @@
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from app import mysql
+# from app import mysql
 from resources import on_login, exists_mail, create_user
 
 
