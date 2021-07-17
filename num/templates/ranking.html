@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr class="table-primary">
+            <th scope="row">Partidas</th>
+        </tr>
+        <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Jugadas</th>
+            <th scope="col">Ganadas</th>
+            <th scope="col">Abandonadas</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%if partidas%}
+        {% for partida in partidas %}
+        <tr class="table table-dark">
+            <td>{{partida[0]}}</td>
+            <td>{{partida[1]}}</td>
+            <td>{{partida[2]}}</td>
+            <td>{{partida[3]}}</td>
+        </tr>
+        {%endfor%}
+        {%endif%}
+    </tbody>
+</table>
+
+
+{% endblock %}

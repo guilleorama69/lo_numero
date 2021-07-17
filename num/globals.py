@@ -39,7 +39,9 @@ def make_sql_querry(connectionName, sql, data=None, fetchType=None):
             cursor.execute(sql)
         else:
             cursor.execute(sql, data)
-
+            str = cursor._executed
+            str2 = cursor._result  # cursor._executed cursor._rows cursor._result
+            print(f'Execute:{str}, Result:{str2}')
         if fetchType == "all":
             toReturn = cursor.fetchall()
             connectionName.connection.commit()
@@ -51,6 +53,7 @@ def make_sql_querry(connectionName, sql, data=None, fetchType=None):
             cursor.close()
             return toReturn
         connectionName.connection.commit()
+
         cursor.close()
     except TypeError:
         return print('TypeError')

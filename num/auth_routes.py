@@ -23,8 +23,7 @@ def login_post():
             session['name'] = data[0]
             session['id'] = data[2]
             session['mail'] = data[3]
-
-            return redirect(url_for('no_auth_main.profile'))
+            return redirect(url_for('no_auth_main.buscarSala'))
         else:
             error = "Usuario o Password Incorrectos"
             return render_template('login.html', error=error)

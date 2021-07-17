@@ -11,18 +11,20 @@
 
     {%endwith%}
     <div class="row gx-3">
-        <div class="col-auto" id="table_on-line">
-            <table class="table table-hover">
-                <thead>
-                    <tr class="table-primary">
-                        <th scope="col">Usuarios On-line</th>
-                </thead>
-                <tbody>
-                    <tr class="table">
-                        <td>Otto</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="col-auto">
+            <div class="card">
+                <img maxwidth=80px src="" class="card-img-top" alt="avatar">
+                <div class="card-body">
+                    <h5 class="card-title">Estadisticas</h5>
+                    {% if stats %}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Tienes {{stats[0]}} partidas Jugadas</li>
+                        <li class="list-group-item">Tienes {{stats[0]}} partidas Ganadas</li>
+                        <li class="list-group-item">Tienes {{stats[0]}} partidas Abandonadas</li>
+                    </ul>
+                    {%endif%}
+                </div>
+            </div>
         </div>
         <div class="col-auto" id="tabla_tirada">
             <table class="table table-hover">
@@ -38,7 +40,7 @@
                     {% if salas %}
                     {%for sala in salas%}
                     <tr class="table-success">
-                        <th scope="row">{{loop.index}}</th>
+                        <td scope="row">{{loop.index}}</td>
                         <td>{{sala[0]}}</td>
                         <td>{{sala[1]}}</td>
                         <td><input class="btn btn-success" type="button" value="Join..t :)"></td>
@@ -52,16 +54,21 @@
             {% endif %}
             <form>
                 {% if not locked %}
-                <div class="row g-3 ">
-                    <div class="col-auto">
-                        <label for="Sala" class="form-label">Crear Sala</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" class=" col-6 form-control" name="sala" id="id_sala">
-                    </div>
+                <div class="card">
+                    <div class="row g-3 card-body ">
+                        <h5 class="card-title">Crear Sala</h5>
+                        <div class="col-auto">
+                            <label for="mynum" class="form-label">Tu Numero</label>
 
-                    <div class="col-auto">
-                        <button onclick=crear_sala() class="btn btn-outline-primary">Crear</button>
+                            <input type="text" class=" col-6 form-control" name="mynum" id="id_mynum">
+                        </div>
+                        <div class="col-auto">
+                            <label for="Sala" class="form-label">Nombre Sala</label>
+
+                            <input type="text" class=" col-6 form-control" name="sala" id="id_sala">
+                        </div>
+                        <a href="#" onclick=crear_sala() class="btn btn-primary">Crear</a>
+
                     </div>
                 </div>
                 {%endif%}

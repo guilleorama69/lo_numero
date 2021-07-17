@@ -2,6 +2,7 @@
 
 
 from flask import Blueprint, render_template, session, redirect, url_for, g, flash
+import datetime
 from flask_socketio import emit
 from app import mysql, mysocket
 from resources import login_required,  authenticated_only, numeroOK, valorarTirada
@@ -33,7 +34,15 @@ def profile():
     return render_template('profile.html')
 
 
-@ main.route('/buscarsala')
+@ main.route('/ranks')
+@ login_required
+def ranks():
+    partidas = (('mail', 'jugadas', 'ganadas', 'abandonadas'),
+                ('mail', 'jugadas', 'ganadas', 'abandonadas'))
+    return render_template('ranking.html', partidas=partidas)
+
+
+@ main.route('/buscarsala/')
 @ login_required
 def buscarSala():
     locked = False
@@ -49,24 +58,33 @@ def buscarSala():
 
 @ mysocket.on('crear_sala')
 @ authenticated_only
-def setsala(sala):
-    if len(sala) > 1 < 10:
-        sql = "SELECT * FROM salas WHERE sala = (%s) "
-        data = [sala]
-        existe = make_sql_querry(mysql, sql, data, 'one')
-        if existe is None:
-            mail = session.get('mail')
-            sql = "INSERT INTO salas (sala, creador) values (%s,%s);"
-            data = (sala, mail)
-            make_sql_querry(mysql, sql, data)
-            render_template('buscarsala.html')
+def setsala(sala, num):
+    if numeroOK(num) == True:
+        if len(sala) > 1 < 10:
+            sql = "SELECT * FROM salas WHERE sala = (%s) "
+            data = [sala]
+            existe = make_sql_querry(mysql, sql, data, 'one')
+            if existe is None:
+                mail = session.get('mail')
+                sql = "INSERT INTO salas (sala, creador, numero) values (%s,%s, %s);"
+                data = (sala, mail, int(num))
+                make_sql_querry(mysql, sql, data)
+                emit('redirect', {'url': url_for('no_auth_main.buscarSala')})
 
-        else:
-            print('------------------------')
-            print(f'existe:{existe}')
-            print('------------------------')
-            error = 'La sala existe en otra instancia, cree otro codigo'
-            render_template('buscarsala.html', error=error)
+            else:
+                error = 'La sala existe en otra instancia, cree otro codigo'
+                emit('error', {'error': error})
+                emit('redirect', {'url': url_for(
+                    'no_auth_main.buscarSala')})
+
+    else:
+        print('------------------------')
+        print(f'numero: {num}')
+        print('------------------------')
+        error = 'El numero ingresado no es valido'
+        emit('error', {'error': error})
+        emit('redirect', {'url': url_for(
+            'no_auth_main.buscarSala')})
 
 
 @ main.route('/lonumero')
@@ -92,21 +110,22 @@ def terms():
 
 @ mysocket.on('login')
 def on_login_user(data):
-    emit('status_change', {'username': data,
-         'status': 'online'}, broadcast=True)
+    emit('status_change', {'username': data}, broadcast=True)
 
 
-@ mysocket.on('message')
+@ mysocket.on('chat')
 @ authenticated_only
 def handleMessage(data):
-    print(data)
-    # emit(data, broadcast=True)
+    email = session.get('mail')
+    now = datetime.datetime.now()
+    emit('receive_chat', {
+         'texto': f'[{str(now)[:-7]}] {email}: {data}'}, broadcast=True)
 
 
 @ mysocket.on('logout')
 @ authenticated_only
 def handleLogout(data):
-    print(data)
+    emit('status_change', {'username': data}, broadcast=True)
 
 
 @ mysocket.on('tirada')
@@ -116,9 +135,10 @@ def handleTirada(data):
         mail = session.get('mail')
         adivinar = 4567  # desarrollar de donde obtenerlo
         resultado = float(valorarTirada(adivinar, data))
+        room = "todo55"
         sql = "INSERT INTO tiradas (numero, resultado, room, mail) values (%s,%s,%s,%s);"
-        values = (int(data), resultado, "todo55", mail)
+        values = (int(data), resultado, room, mail)
         make_sql_querry(mysql, sql, values)
-        redirect(url_for('no_auth_main.loNumero'))
+        emit('redirect', {'url': url_for('no_auth_main.loNumero')})
     else:
-        flash('Mala tirada', 'error')
+        emit('error', {'error': 'Mala Tirada'})

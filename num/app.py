@@ -13,6 +13,10 @@ debugOn = get_env_config('DEBUG', 'env.cfg')
 print(f'db:{db}, user:{dbuser}, pass:{password}, host:{host}, key:{secretkey}, debug:{debugOn}')
 mysql = MySQL()
 mysocket = SocketIO()
+# ----------------
+# debuggingggggggg
+# cursor= mysql.connection.cursor()
+# cursor.
 
 
 def create_app():

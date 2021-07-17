@@ -1,20 +1,35 @@
 let socket = io.connect();
 
-let enviar = function () {
-  let data = document.getElementById("msg_text");
-  socket.send(data.value);
-  data.value = "";
-};
-
-socket.on("status_change", function (data) {
-  alert(data);
+socket.on("redirect", function (data) {
+  window.location = data.url;
 });
 
+socket.on("status_change", function (data) {
+  alert(data.username);
+});
+socket.on("logout", function (data) {
+  alert(data.username);
+});
+socket.on("error", function (data) {
+  alert(data.error);
+});
+socket.on("receive_chat", function (data) {
+  let texto = document.getElementById("chat");
+  texto.value = ` ${texto.value} \n ${data.texto}`;
+});
+
+let enviar_chat = function () {
+  let data = document.getElementById("msg_text");
+  socket.emit("chat", data.value);
+  data.value = "";
+};
 let online = function () {
-  socket.emit("login", { user: document.getElementById("login_email").value });
+  user = document.getElementById("login_email").value;
+  socket.emit("login", ` ${user} se nos a unido!!`);
 };
 let offline = function () {
-  socket.emit("logout", { username: "{{name}}", id: "{{id}}" });
+  let user = "nosabanadono";
+  socket.emit("logout", ` ${user} ya no nos ama :( !!`);
 };
 let enviar_tirada = function () {
   let data = document.getElementById("id_tirada");
@@ -22,7 +37,9 @@ let enviar_tirada = function () {
   data.value = "";
 };
 let crear_sala = function () {
-  let data = document.getElementById("id_sala");
-  socket.emit("crear_sala", data.value);
-  data.value = "";
+  let num = document.getElementById("id_mynum");
+  let sala = document.getElementById("id_sala");
+  socket.emit("crear_sala", sala.value, num.value);
+  num.value = "";
+  sala.value = "";
 };
