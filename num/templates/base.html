@@ -74,30 +74,48 @@
 
     <div class="padd-20">
         <div class="container">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </div>
-    {%if g.user%}
-    <div class="fondoBlanco text-center container-fluid">
-        <div class="row gx-3 col-auto"><textarea name="" id="chat" rows="10" readonly></textarea></div>
-        <div class="row">
-            <div class="col-auto"><input type="text" name="" id="msg_text"></div>
-            <div class="col-auto"><button onclick=enviar_chat() id="send_msg"
-                    class="btn btn-outline-primary">Enviar</button>
+            {%if g.user%}
+            {% with messages = get_flashed_messages() %}
+            <div class="fondoBlanco text-center container-fluid">
+
+                <h1 class="">
+                    Excelente {% if messages %}{{messages[0]}}{%endif%}, juguemos un rato!!
+                </h1>
+
+                {%endwith%}
+                {%endif%}
+                {% block content %}
+                {% endblock %}
+
+                {%if g.user%}
+                <div class="fondoBlanco text-center container-fluid ">
+                    <h5 class="">Chattttt</h5>
+
+                    <div class="row g-3 padd-5-tb">
+                        <div class="col-auto">
+                            <input type="text" name="" id="msg_text">
+                        </div>
+                        <div class="col-auto">
+                            <button onclick=enviar_chat() id="send_msg" class="btn btn-outline-primary">Enviar</button>
+                        </div>
+                    </div>
+                    <div class="row gx-3 col-auto ">
+                        <textarea name="" id="chat" rows="10" readonly></textarea>
+                    </div>
+
+
+                </div>
+                {%endif%}
             </div>
         </div>
-    </div>
-    {%endif%}
-
-    <footer>
-        <div class="block">
-            <a href="https://t.me/guilleorama"><i class="fab fa-telegram "></i></a>
-            <a href="https://wa.me/15551234567?text=hello%20world"><i class="fab fa-whatsapp "></i></a>
-            <a href="mailto:guilleorama@gmail.com"><i class="far fa-envelope "></i></a>
-        </div>
-        <div class="block"><i>©2021 by guilleorama</i></div>`
-    </footer>
+        <footer>
+            <div class="block">
+                <a href="https://t.me/guilleorama"><i class="fab fa-telegram "></i></a>
+                <a href="https://wa.me/15551234567?text=hello%20world"><i class="fab fa-whatsapp "></i></a>
+                <a href="mailto:guilleorama@gmail.com"><i class="far fa-envelope "></i></a>
+            </div>
+            <div class="block"><i>©2021 by guilleorama</i></div>`
+        </footer>
 </body>
 
 

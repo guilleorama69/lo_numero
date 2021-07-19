@@ -66,6 +66,10 @@ form .error {
 .padd-20 {
   padding-top: 4.2rem;
 }
+.padd-5-tb {
+  padding-top: 1.1rem;
+  padding-bottom: 1.1rem;
+}
 
 .fondoBlanco {
   align-content: center;

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- datos=(auth, jugadores, jugando) -->
+<div class="fondoBlanco text-center container-fluid">
+
+    <div class="row gx-3">
+
+        <div class="col-auto" id="tabla_tirada">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Turno</th>
+                        <th scope="col">Jugadores en sala</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if datos[1] %}
+                    {%set turno = namespace(len=0) %}
+                    {%for jugador in datos[1]%}
+                    <tr class="table-success">
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{jugador[1]}}</td>
+                    </tr>
+                    {%set turno.len = loop.length %}
+                    {%endfor%}
+                    {%endif%}
+                    <input type="text" style="display: none;" id="id_turno" value={{turno.len}}>
+                </tbody>
+
+            </table>
+
+            {%if not datos[2]%}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                Ingresar mi numero
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Mi numero</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="text" name="numero" id="id_ingresa_numero">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+                                onclick=enviar_numero()>Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            {%if datos[0]%}
+            <button onclick=comenzar_partida() class="btn btn-outline-danger">Comenzar
+                Partida</button>
+            {%else%}
+            <h5>Esperando que el creador commience la partida...</h5>
+            {%endif%}
+        </div>
+    </div>
+
+</div>
+
+{%endblock%}

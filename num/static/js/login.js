@@ -28,13 +28,17 @@ let online = function () {
   socket.emit("login", ` ${user} se nos a unido!!`);
 };
 let offline = function () {
-  let user = "nosabanadono";
-  socket.emit("logout", ` ${user} ya no nos ama :( !!`);
+  socket.emit("logout");
 };
 let enviar_tirada = function () {
   let data = document.getElementById("id_tirada");
   socket.emit("tirada", data.value);
   data.value = "";
+};
+let enviar_numero = function () {
+  let data = document.getElementById("id_ingresa_numero");
+  let turno = document.getElementById("id_turno");
+  socket.emit("set_number", data.value, turno.value);
 };
 let crear_sala = function () {
   let num = document.getElementById("id_mynum");

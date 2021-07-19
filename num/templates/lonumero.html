@@ -2,28 +2,11 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
+
 <div class="fondoBlanco text-center container-fluid">
 
-    <h1 class="">
-        Bienvenido {% if messages %}{{messages[0]}}{%endif%}, juguemos un rato!!
-    </h1>
-
-    {%endwith%}
     <div class="row gx-3">
-        <div class="col-auto" id="table_on-line">
-            <table class="table table-hover">
-                <thead>
-                    <tr class="table-primary">
-                        <th scope="col">Usuarios On-line</th>
-                </thead>
-                <tbody>
-                    <tr class="table">
-                        <td>Otto</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
         <div class="col-auto" id="tabla_tirada">
             <table class="table table-hover">
                 <thead>
@@ -49,11 +32,9 @@
             </table>
             <form>
                 <div class="row g-3 ">
+
                     <div class="col-auto">
-                        <label for="Tirada" class="form-label">Has tu tirada</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" class=" col-6 form-control" id="id_tirada">
+                        <input type="text" class=" col-6 form-control" placeholder="Escribe tu tirada" id="id_tirada">
                     </div>
 
                     <div class="col-auto">
