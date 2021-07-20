@@ -10,7 +10,7 @@ secretkey = get_env_config('SECRETKEY', 'env.cfg')
 dbuser = get_env_config('DBUSER', 'env.cfg')
 password = get_env_config('DBPASS', 'env.cfg')
 debugOn = get_env_config('DEBUG', 'env.cfg')
-print(f'db:{db}, user:{dbuser}, pass:{password}, host:{host}, key:{secretkey}, debug:{debugOn}')
+#print(f'db:{db}, user:{dbuser}, pass:{password}, host:{host}, key:{secretkey}, debug:{debugOn}')
 mysql = MySQL()
 mysocket = SocketIO()
 # ----------------
