@@ -26,7 +26,7 @@ def get_env_config(var, file):
         return -1, print(f'Unexpected error from get_env_config()')
 
 
-def make_sql_querry(connectionName, sql, data=None, fetchType=None):
+def make_sql_query(connectionName, sql, data=None, fetchType=None):
     """
 
     Definir fetchType como "one" o "all" para lograr retorno
