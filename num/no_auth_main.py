@@ -1,25 +1,27 @@
 # import functools
 
 
-from flask import Blueprint, render_template, session, redirect, url_for, g, flash
+from flask import Blueprint, render_template, session, url_for, g, flash
 import datetime
 from flask_socketio import emit
 from app import mysql, mysocket
 from resources import login_required,  authenticated_only, numeroOK, valorarTirada
-from globals import make_sql_querry
+from globals import make_sql_query
 
 main = Blueprint('no_auth_main', __name__)
 
 
 @main.before_app_request
 def if_logged():
+    # session.permanent = True
+    # main.permanent_session_lifetime = timedelta(minutes=1)
     user_id = session.get('id')
     if user_id is None:
         g.user = None
     else:
         sql = "SELECT name FROM users WHERE id = %s"
         data = [user_id]
-        g.user = make_sql_querry(mysql, sql, data, 'one')
+        g.user = make_sql_query(mysql, sql, data, 'one')
 
 
 @ main.route('/')
@@ -50,7 +52,7 @@ def buscarSala():
     mail = session.get('mail')
     flash(str(g.user)[1:-2])
     sql = "SELECT sala, creador FROM salas WHERE abierta = True"
-    salas = make_sql_querry(mysql, sql, None, 'all')
+    salas = make_sql_query(mysql, sql, None, 'all')
     for sala in salas:
         if sala[1] == mail:
             locked = True
@@ -66,14 +68,14 @@ def uniendose(sala):
     jugando = False
     sql = "SELECT abierta FROM salas WHERE sala = (%s)"
     data = [sala]
-    abierta = bool(make_sql_querry(mysql, sql, data, 'one'))
+    abierta = bool(make_sql_query(mysql, sql, data, 'one'))
     # si la sala esta abierta pregunto si el jugador es el creador de la sala
     # cargo los jugadores en la misma
     if abierta:
         mail = session.get('mail')
-        sql = f'SELECT creador FROM salas WHERE sala = (%s)'
+        sql = "SELECT creador FROM salas WHERE sala = (%s)"
         data = [sala]
-        creador = make_sql_querry(mysql, sql, data, 'one')
+        creador = make_sql_query(mysql, sql, data, 'one')
 
         # si el usuario no es el creador no puede iniciar la partida
         if mail == creador[0]:
@@ -81,7 +83,7 @@ def uniendose(sala):
         # cargo lista de jugadores
         sql = "SELECT * FROM players WHERE sala = (%s)"
         data = [sala]
-        jugadores = make_sql_querry(mysql, sql, data, 'all')
+        jugadores = make_sql_query(mysql, sql, data, 'all')
         # busco si esta el jugador en sala
         jugando = False
         for jugador in jugadores:
@@ -105,10 +107,10 @@ def loNumero():
     mail = session.get('mail')
     sql = "select * from salas where creador = (%s)"
     data = [mail]
-    sala = make_sql_querry(mysql, sql, data, 'one')
+    sala = make_sql_query(mysql, sql, data, 'one')
     sql = "select * from tiradas where room = (%s) and mail = (%s)"
     data = (sala, mail)
-    tiradas = make_sql_querry(mysql, sql, data, 'all')
+    tiradas = make_sql_query(mysql, sql, data, 'all')
     if tiradas is None:
         return 'sala no encontrada'
     return render_template('lonumero.html', tiradas=tiradas)
@@ -132,9 +134,9 @@ def on_login_user(data):
 @ mysocket.on('logout')
 @ authenticated_only
 def handleLogout():
-    mail = session.get('mail')
+    nick = session.get('nick')
     emit('status_change', {
-         'username': f'{mail} ya no nos ama!! :( '}, broadcast=True)
+         'username': f'{nick} ya no nos ama!! :( '}, broadcast=True)
 
 
 @ mysocket.on('crear_sala')
@@ -144,17 +146,17 @@ def setsala(sala, num):
         if len(sala) > 1 < 10:
             sql = "SELECT * FROM salas WHERE sala = (%s) "
             data = [sala]
-            existe = make_sql_querry(mysql, sql, data, 'one')
+            existe = make_sql_query(mysql, sql, data, 'one')
             if existe is None:
                 mail = session.get('mail')
                 # inserto nueva sala
                 sql = "INSERT INTO salas (sala, creador) values (%s,%s);"
                 data = (sala, mail)
-                make_sql_querry(mysql, sql, data)
+                make_sql_query(mysql, sql, data)
                 # inserto numero elegido por player  y asocio a sala
                 sql = "INSERT INTO players (mail, sala, numero, turno, turnoboolean) values (%s,%s,%s,%s,%s);"
                 data = (mail, sala, int(num), 1, True)
-                make_sql_querry(mysql, sql, data)
+                make_sql_query(mysql, sql, data)
                 emit('redirect', {'url': url_for('no_auth_main.buscarSala')})
 
             else:
@@ -179,7 +181,7 @@ def cargar_player(data, turno):
         sala = session.get('tmp_sala')
         sql = "INSERT INTO players (mail, sala, numero, turno, turnoboolean) values (%s,%s,%s,%s,%s);"
         vars = (mail, sala, data, int(turno)+1, False)
-        make_sql_querry(mysql, sql, vars)
+        make_sql_query(mysql, sql, vars)
         emit('redirect', {'url': sala})
     else:
         error = 'El numero ingresado no es valido'
@@ -196,7 +198,7 @@ def handleTirada(data):
         room = "todo55"
         sql = "INSERT INTO tiradas (numero, resultado, room, mail) values (%s,%s,%s,%s);"
         values = (int(data), resultado, room, mail)
-        make_sql_querry(mysql, sql, values)
+        make_sql_query(mysql, sql, values)
         emit('redirect', {'url': url_for('no_auth_main.loNumero')})
     else:
         emit('error', {'error': 'Mala Tirada'})
@@ -205,8 +207,8 @@ def handleTirada(data):
 @ mysocket.on('chat')
 @ authenticated_only
 def handleMessage(data):
-    email = session.get('mail')
+    nick = session.get('nick')
     now = datetime.datetime.now()
     if len(data) > 0:
         emit('receive_chat', {
-            'texto': f'[{str(now)[:-7]}] {email}: {data}'}, broadcast=True)
+            'texto': f'[{str(now)[:-7]}] {nick}: {data}'}, broadcast=True)

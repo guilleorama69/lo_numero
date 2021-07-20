@@ -5,7 +5,7 @@ socket.on("redirect", function (data) {
 });
 
 socket.on("status_change", function (data) {
-  alert(data.username);
+  alert(`${data.username} se nos ha unido`);
 });
 socket.on("logout", function (data) {
   alert(data.username);
@@ -23,10 +23,10 @@ let enviar_chat = function () {
   socket.emit("chat", data.value);
   data.value = "";
 };
-let online = function () {
-  user = document.getElementById("login_email").value;
-  socket.emit("login", ` ${user} se nos a unido!!`);
-};
+// let online = function () {
+//   user = document.getElementById("login_email").value;
+//   socket.emit("login", ` ${user} se nos a unido!!`);
+// };
 let offline = function () {
   socket.emit("logout");
 };
