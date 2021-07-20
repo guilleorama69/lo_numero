@@ -1,5 +1,6 @@
 import functools
 from app import mysql
+from globals import make_sql_query
 from flask import request, flash, session, redirect, url_for, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_socketio import disconnect
@@ -13,7 +14,7 @@ def on_login():
     email = request.form.get('email')
     password = request.form.get('password')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT name, pass, id, mail FROM users WHERE mail = %s', [
+    cursor.execute('SELECT name, pass, id, mail, nickname FROM users WHERE mail = %s', [
                    email])
     user = cursor.fetchone()
     cursor.close()
@@ -24,11 +25,11 @@ def on_login():
         return False
 
 
-def create_user(email, name, lastname, password, birthday, gender):
+def create_user(email, name, nickname, lastname, password, birthday, gender):
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute('INSERT INTO users (mail, name, last_name, pass, birthday, gender) VALUES (%s,%s,%s,%s,%s,%s)',
-                       (email, name, lastname, generate_password_hash(password), birthday, gender))
+        cursor.execute('INSERT INTO users (mail, name, nickname, last_name, pass, birthday, gender) VALUES (%s,%s,%s,%s,%s,%s,%s)',
+                       (email, name, nickname, lastname, generate_password_hash(password), birthday, gender))
         mysql.connection.commit()
         cursor.close()
         flash('Usuario creado correctamente')
@@ -36,11 +37,15 @@ def create_user(email, name, lastname, password, birthday, gender):
         return flash('Ocurrio un error creando el usuario')
 
 
-def exists_mail(mail):
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT mail FROM users WHERE mail = %s', [mail])
-    data = cursor.fetchone()
-    cursor.close()
+def if_exists(columnOnTbl, tbl, var):
+    """
+    columnOnTbl (str) corresponde a la columna a comparar
+    tbl (str) la tabla para usar
+    var (str) la cadena a buscar
+
+    """
+    sql = f'SELECT {columnOnTbl} FROM {tbl} WHERE {columnOnTbl} = \'{var}\';'
+    data = make_sql_query(mysql, sql, None, 'one')
     if data:
         return True
     else:
